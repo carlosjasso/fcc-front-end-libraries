@@ -1,0 +1,24 @@
+.flexCol {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 100vw;
+    min-height: 100vh;
+    background: lightgray;
+
+    .list {
+        min-width: 320px;
+        background: gray;
+        color: white;
+        border-radius: 5px;
+
+        li {
+            margin: 8px;
+
+            a {
+                color: inherit;
+            }
+        }
+    }
+}

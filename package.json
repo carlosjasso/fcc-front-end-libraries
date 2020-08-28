@@ -1,0 +1,29 @@
+{
+  "name": "fcc-front-end-libraries",
+  "version": "1.0.0",
+  "description": "FCC Front End Libraries Certification projects",
+  "main": "",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build && next export && mv -v out docs",
+    "start": "next start",
+    "debug": "NODE_OPTIONS='--inspect' next dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carlosjasso/fcc-front-end-libraries.git"
+  },
+  "keywords": [],
+  "author": "Carlos Jasso",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/carlosjasso/fcc-front-end-libraries/issues"
+  },
+  "homepage": "",
+  "dependencies": {
+    "next": "^9.5.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "sass": "^1.26.10"
+  }
+}
