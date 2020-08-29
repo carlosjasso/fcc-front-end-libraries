@@ -1,4 +1,4 @@
 # FCC: Front End Libraries Certification Projects
 
-This Repository holds my projects for a FCC certification.
+This Repository holds my projects for an FCC certification.
 
