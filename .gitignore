@@ -6,3 +6,8 @@
 # next.js default output
 /.next/
 /out/
+
+# Excluding firebase details
+/.firebase/
+.firebaserc
+firebase.json
