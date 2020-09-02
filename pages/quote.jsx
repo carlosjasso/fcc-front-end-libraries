@@ -20,18 +20,27 @@ export default class Quote extends React.Component{
         this.handleClick = this.handleClick.bind(this);
     }
 
+    // Element lifecycle
     componentDidMount() {
         this.getQuotes();
     }
 
+    // Events
     handleClick() {
+        const currentColor = this.state.color;
+        const newColor = this.getRandomColor();
+
         this.fadeOut(this.state.color);
-        this.setState({
-            quote: this.getRandomQuote(this.state.data)
-        });
-        setTimeout(() => this.fadeIn(this.getRandomColor()), 600);
+        setTimeout(() => {
+            this.setState({
+                quote: this.getRandomQuote(this.state.data),
+                color: newColor
+            });
+            this.fadeIn(currentColor, newColor);
+        }, 500);
     }
 
+    // util functions
     getRandomColor() {
         const colors = {
             "Cyan Process":"5bc0eb",
@@ -62,13 +71,15 @@ export default class Quote extends React.Component{
                 return response.json();
             })
             .then(data => {
-                const randomColor = this.getRandomColor();
+                const currentColor = this.state.color;
+                const newColor = this.getRandomColor();
+
                 this.setState({
                     data: data.quotes,
                     quote: this.getRandomQuote(data.quotes),
-                    color: randomColor
+                    color: newColor
                 });
-                this.fadeIn(randomColor);
+                this.fadeIn(currentColor, newColor);
             })
             .catch(error => alert(`getQuotes() - Could not fetch quotes: ${error}`));
     }
@@ -84,74 +95,71 @@ export default class Quote extends React.Component{
         }
     }
 
-    fadeIn(color) {
-        const backgroundKeyframes = [
-            { background: "#222222"},
-            { background: color}
-        ];
+    fadeIn(currentColor, newColor) {
+        const millis = 500;
 
-        const backgroundOptions = {
-            duration: 500, 
-            iterations: 1, 
-            fill: "forwards"
-        }
+        const backgroundKeyframes = [
+            { background: currentColor },
+            { background: newColor}
+        ];
 
         const colorKeyframes = [
-            { color: "#222222"},
-            { color: color}
+            { color: currentColor },
+            { color: newColor }
         ];
 
-        const foregroundOptions = {
-            duration: 200, 
+        const opacityKeyframes = [
+            { opacity: 0 },
+            { opacity: 1 }
+        ];
+
+        const options = {
+            duration: millis, 
             iterations: 1, 
             fill: "forwards"
         }
 
         const background = document.getElementById("background");
-        background.animate(backgroundKeyframes, backgroundOptions);
+        background.animate(backgroundKeyframes, options);
 
         const quote = document.getElementById("quote-box");
-        quote.animate(colorKeyframes, foregroundOptions)
+        quote.animate(colorKeyframes, options)
+
+        const text = document.getElementById("text");
+        text.animate(opacityKeyframes, options);
 
         const buttons = document.getElementsByClassName(Styles.button);
         for (let i = 0; i < buttons.length; i++) {
-            buttons[i].animate(backgroundKeyframes, foregroundOptions)
+            buttons[i].animate(backgroundKeyframes, options)
         }
     }
 
     fadeOut(color) {
+        const millis = 500;
+
         const backgroundKeyframes = [
             { background: color},
             { background: "#222222"}
         ];
-
-        const backgroundOptions = {
-            duration: 800, 
-            iterations: 1, 
-            fill: "forwards"
-        }
 
         const colorKeyframes = [
             { color: color},
             { color: "#222222"}
         ];
 
-        const foregroundOptions = {
-            duration: 200, 
+        const opacityKeyframes = [
+            { opacity: 1 },
+            { opacity: 0 }
+        ];
+
+        const options = {
+            duration: millis, 
             iterations: 1, 
             fill: "forwards"
         }
 
-        const background = document.getElementById("background");
-        background.animate(backgroundKeyframes, backgroundOptions);
-
-        const quote = document.getElementById("quote-box");
-        quote.animate(colorKeyframes, foregroundOptions)
-
-        const buttons = document.getElementsByClassName(Styles.button);
-        for (let i = 0; i < buttons.length; i++) {
-            buttons[i].animate(backgroundKeyframes, foregroundOptions)
-        }
+        const text = document.getElementById("text");
+        text.animate(opacityKeyframes, options);
     }
 
     render() {
@@ -178,9 +186,9 @@ export default class Quote extends React.Component{
                                 <svg focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g><path fill="currentColor" d="M176 32H48A48 48 0 0 0 0 80v128a48 48 0 0 0 48 48h80v64a64.06 64.06 0 0 1-64 64h-8a23.94 23.94 0 0 0-24 23.88V456a23.94 23.94 0 0 0 23.88 24H64a160 160 0 0 0 160-160V80a48 48 0 0 0-48-48z"></path><path fill="currentColor" className={Styles["less-opacity"]} d="M464 32H336a48 48 0 0 0-48 48v128a48 48 0 0 0 48 48h80v64a64.06 64.06 0 0 1-64 64h-8a23.94 23.94 0 0 0-24 23.88V456a23.94 23.94 0 0 0 23.88 24H352a160 160 0 0 0 160-160V80a48 48 0 0 0-48-48z"></path></g></svg>
                             </span>
                         </span>
-                    </p>
-                    <p id="author" className={Styles.author}>
+                        <p id="author" className={Styles.author}>
                         {quote.author !== "" ? `- ${quote.author}` : ""}
+                    </p>
                     </p>
                     <div style={{flexGrow: 1}} />
                     <section className={Styles.buttons}>
