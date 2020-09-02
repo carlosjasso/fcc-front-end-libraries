@@ -27,7 +27,6 @@ export default class Quote extends React.Component{
 
     // Events
     handleClick() {
-        const currentColor = this.state.color;
         const newColor = this.getRandomColor();
 
         this.fadeOut(this.state.color);
@@ -36,23 +35,23 @@ export default class Quote extends React.Component{
                 quote: this.getRandomQuote(this.state.data),
                 color: newColor
             });
-            this.fadeIn(currentColor, newColor);
+            this.fadeIn(newColor);
         }, 500);
     }
 
     // util functions
     getRandomColor() {
         const colors = {
-            "Cyan Process":"5bc0eb",
-            "Minion Yellow":"fde74c",
             "Android Green":"9bc53d",
+            "Cyan Process":"5bc0eb",
             "Madder Lake":"c3423f",
-            "Raisin Black":"211a1e",
             "Yellow Orange":"ffa630",
-            "Tea Green":"d7e8ba",
-            "Cadet Blue":"4da1a9",
+            "Old Mauve":"611c35",
             "Y In Mn Blue":"2e5077",
-            "Old Mauve":"611c35"
+            "Cadet Blue":"4da1a9",
+            "Space Cadet":"25283d",
+            "Maximum Yellow Red":"f5b841",
+            "Opal":"9db5b2"
         }
 
         const colorsKeys = Object.keys(colors);
@@ -71,7 +70,6 @@ export default class Quote extends React.Component{
                 return response.json();
             })
             .then(data => {
-                const currentColor = this.state.color;
                 const newColor = this.getRandomColor();
 
                 this.setState({
@@ -79,7 +77,7 @@ export default class Quote extends React.Component{
                     quote: this.getRandomQuote(data.quotes),
                     color: newColor
                 });
-                this.fadeIn(currentColor, newColor);
+                this.fadeIn(newColor);
             })
             .catch(error => alert(`getQuotes() - Could not fetch quotes: ${error}`));
     }
@@ -95,16 +93,16 @@ export default class Quote extends React.Component{
         }
     }
 
-    fadeIn(currentColor, newColor) {
+    fadeIn(newColor) {
         const millis = 500;
 
         const backgroundKeyframes = [
-            { background: currentColor },
+            { background: "#222222" },
             { background: newColor}
         ];
 
         const colorKeyframes = [
-            { color: currentColor },
+            { color: "#222222" },
             { color: newColor }
         ];
 
@@ -158,8 +156,16 @@ export default class Quote extends React.Component{
             fill: "forwards"
         }
 
+        const background = document.getElementById("background");
+        background.animate(backgroundKeyframes, options);
+
         const text = document.getElementById("text");
         text.animate(opacityKeyframes, options);
+
+        const buttons = document.getElementsByClassName(Styles.button);
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].animate(backgroundKeyframes, options)
+        }
     }
 
     render() {
