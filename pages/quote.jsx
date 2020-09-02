@@ -8,8 +8,12 @@ export default class Quote extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            primaryColor: `#${this.getRandomColor()}`,
-            data: []
+            data: [],
+            quote: {
+                text: "",
+                author: ""
+            },
+            color: "#222222"
         }
 
         // This binding is necessary to make `this` work in the callback
@@ -21,9 +25,11 @@ export default class Quote extends React.Component{
     }
 
     handleClick() {
+        this.fadeOut(this.state.color);
         this.setState({
-            primaryColor: `#${this.getRandomColor()}`
+            quote: this.getRandomQuote(this.state.data)
         });
+        setTimeout(() => this.fadeIn(this.getRandomColor()), 600);
     }
 
     getRandomColor() {
@@ -41,9 +47,10 @@ export default class Quote extends React.Component{
         }
 
         const colorsKeys = Object.keys(colors);
-        const randomkey = colorsKeys[getRandomInt(0, colorsKeys.length)];
+        const randomIndex = getRandomInt(0, colorsKeys.length);
+        const randomkey = colorsKeys[randomIndex];
         
-        return colors[randomkey];
+        return `#${colors[randomkey]}`;
     }
 
     getQuotes() {
@@ -54,13 +61,22 @@ export default class Quote extends React.Component{
                 } 
                 return response.json();
             })
-            .then(data => this.setState({data: data.quotes}))
-            .catch(error => console.log(`Could not fetch quotes: ${error}`));
+            .then(data => {
+                const randomColor = this.getRandomColor();
+                this.setState({
+                    data: data.quotes,
+                    quote: this.getRandomQuote(data.quotes),
+                    color: randomColor
+                });
+                this.fadeIn(randomColor);
+            })
+            .catch(error => alert(`getQuotes() - Could not fetch quotes: ${error}`));
     }
 
-    getRandomQuote() {
-        const quotesLen = this.state.data.length;
-        const quote = quotesLen > 0 ? this.state.data[getRandomInt(0, quotesLen)] : undefined;
+    getRandomQuote(quotes) {
+        const quotesLen = quotes.length;
+        const randomIndex = getRandomInt(0, quotesLen);
+        const quote = quotesLen > 0 ? quotes[randomIndex] : undefined;
         
         return {
             text: typeof(quote) !== "undefined" ? quote.quote : "",
@@ -68,13 +84,82 @@ export default class Quote extends React.Component{
         }
     }
 
+    fadeIn(color) {
+        const backgroundKeyframes = [
+            { background: "#222222"},
+            { background: color}
+        ];
+
+        const backgroundOptions = {
+            duration: 500, 
+            iterations: 1, 
+            fill: "forwards"
+        }
+
+        const colorKeyframes = [
+            { color: "#222222"},
+            { color: color}
+        ];
+
+        const foregroundOptions = {
+            duration: 200, 
+            iterations: 1, 
+            fill: "forwards"
+        }
+
+        const background = document.getElementById("background");
+        background.animate(backgroundKeyframes, backgroundOptions);
+
+        const quote = document.getElementById("quote-box");
+        quote.animate(colorKeyframes, foregroundOptions)
+
+        const buttons = document.getElementsByClassName(Styles.button);
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].animate(backgroundKeyframes, foregroundOptions)
+        }
+    }
+
+    fadeOut(color) {
+        const backgroundKeyframes = [
+            { background: color},
+            { background: "#222222"}
+        ];
+
+        const backgroundOptions = {
+            duration: 800, 
+            iterations: 1, 
+            fill: "forwards"
+        }
+
+        const colorKeyframes = [
+            { color: color},
+            { color: "#222222"}
+        ];
+
+        const foregroundOptions = {
+            duration: 200, 
+            iterations: 1, 
+            fill: "forwards"
+        }
+
+        const background = document.getElementById("background");
+        background.animate(backgroundKeyframes, backgroundOptions);
+
+        const quote = document.getElementById("quote-box");
+        quote.animate(colorKeyframes, foregroundOptions)
+
+        const buttons = document.getElementsByClassName(Styles.button);
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].animate(backgroundKeyframes, foregroundOptions)
+        }
+    }
+
     render() {
-        const primaryColor = this.state.primaryColor;
-        const quote = this.getRandomQuote();
+        const quote = this.state.quote;
         const href = `https://twitter.com/intent/tweet?text="${quote.text}"%0D-${quote.author}%0D%23quotes`;
 
         return (
-            <main className={Styles.container} style={{background: primaryColor, color: primaryColor}}>
+            <main id="background" className={Styles.container}>
                 <Head>
                     <title>FCC : Random Quote Machine</title>
                     <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js" async />
@@ -95,16 +180,16 @@ export default class Quote extends React.Component{
                         </span>
                     </p>
                     <p id="author" className={Styles.author}>
-                        {`- ${quote.author}`}
+                        {quote.author !== "" ? `- ${quote.author}` : ""}
                     </p>
                     <div style={{flexGrow: 1}} />
                     <section className={Styles.buttons}>
                         <Link href={href}>
-                            <a style={{background: primaryColor}} id="tweet-quote" className={Styles.button} target={"_blank"}>
-                                <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-twitter fa-w-16 fa-7x"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" class=""></path></svg>
+                            <a id="tweet-quote" className={Styles.button} target={"_blank"} title="Tweet quote">
+                                <svg aria-hidden="true" focusable="false" data-prefix="fab" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path></svg>
                             </a>
                         </Link>
-                        <div style={{background: primaryColor}} id="new-quote" className={Styles.button} onClick={this.handleClick}>New Quote</div>
+                        <div id="new-quote" className={Styles.button} onClick={this.handleClick}>New Quote</div>
                     </section>
                 </section>
             </main>
