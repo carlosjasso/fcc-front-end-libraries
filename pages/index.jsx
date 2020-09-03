@@ -13,6 +13,9 @@ export default function Home() {
                 <li>
                     <Link href="/quote"><a>Random Quote Machine</a></Link>
                 </li>
+                <li>
+                    <Link href="/markdown"><a>Markdown Previewer</a></Link>
+                </li>
             </ul>
         </div>
     );
