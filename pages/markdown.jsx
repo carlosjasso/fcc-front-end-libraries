@@ -8,18 +8,15 @@ export default class MarkdownPPreviewer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            markup: ""
+            markup: props.sample
         }
 
         this.handleTextInput = this.handleTextInput.bind(this);
     }
 
-    startingMarkdown = "# This is a header\n\n## And this is a sub-header\n\n[This is a link](https://google.com)";
-
     // Component lifecycle
     componentDidMount() {
-        this.setState({markup: this.startingMarkdown});
-        document.getElementById("editor").focus();
+        //document.getElementById("editor").focus();
         AppendFCCScript();
     }
 
@@ -38,17 +35,38 @@ export default class MarkdownPPreviewer extends React.Component {
                     <div className={Styles["section-title"]}>
                         <span>Editor</span>
                     </div>
-                    <textarea id="editor" className={Styles.editor} wrap="hard" onChange={this.handleTextInput} value={this.state.markup} />
+                    <div className={Styles["section-content"]}>
+                        <textarea 
+                            id="editor" 
+                            className={Styles.editor} 
+                            wrap="hard" 
+                            onChange={this.handleTextInput} 
+                            value={this.state.markup} />
+                    </div>
                 </section>
                 <section className={Styles["previewer-section"]}>
                     <div className={Styles["section-title"]}>
                         <span>Previewer</span>
                     </div>
-                    <div id="preview" className={Styles.preview}>
+                    <div id="preview" className={`${Styles["section-content"]} ${Styles["preview"]}`}>
                         <Markdown source={this.state.markup} />
                     </div>
                 </section>
             </main>
         );
+    }
+}
+
+export async function getStaticProps() {
+    const fs = require("fs");
+    const path = require("path");
+
+    const file = path.join(process.cwd(), "public", "sample-markdown.md");
+    const sample = fs.readFileSync(file).toString();
+
+    return {
+        props: {
+            sample
+        }
     }
 }
