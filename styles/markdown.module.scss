@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Fira+Mono&display=swap');
 
+$screen-breakpoint: 900px;
+
 .container {
     display: flex;
     flex-direction: row;
@@ -9,40 +11,56 @@
     height: 100vh;
     background: lightgray;
 
-    @mixin round-bottom-border {
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
-    }
-
     @mixin window-section {
         display: flex;
         flex-direction: column;
-
         background: white;
         height: 94%;
         width: 47%;
         border-radius: 5px;
         box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.5);
+        overflow: hidden;
 
         .section-title { 
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            height: 2.4rem;
+            min-height: 2.4rem;
             width: 100%;
             background: darkslategray;
             color: white;
             font-family: Helvetica, Arial, sans-serif;
             font-size: 1.6rem;
             font-weight: bold;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
+
+            .button {
+                display: inherit;
+                position: absolute;
+                right: .8rem;
+                color: white;
+
+                svg {
+                    width: 1.6rem;
+                    height: 1.6rem;
+                }
+
+                &:hover {
+                    opacity: 0.8;
+                    cursor: default;
+                }
+            }
         }
 
         .section-content {
             flex-grow: 1;
-            @include round-bottom-border;
+        }
+
+        @media screen and (max-width: $screen-breakpoint) {    
+            & {
+                height: 47%;
+                width: 94%;
+            }
         }
     }
 
@@ -58,7 +76,7 @@
             border: none;
             font-size: 1.2rem;
             font-family: 'Fira Mono', monospace;
-            @include round-bottom-border;
+            white-space: nowrap;
 
             &:focus {
                 outline: none;
@@ -76,8 +94,31 @@
             overflow: auto;
             
             h1 {
-                font-size: 1.8em;
+                font-size: 2em;
+            }
+
+            code {
+                font-family: 'Fira Mono', monospace;
+                background: lightgray;
+            }
+
+            pre, blockquote {
+                width: 94%;
+                background: lightgray;
+                margin: 0 auto;
+                border-radius: 5px;
+                padding: 8px;
             }
         }
     }
+
+    @media screen and (max-width: $screen-breakpoint) {
+        & {
+            flex-direction: column;
+        }
+    }
+}
+
+.no-opacity {
+    opacity: 0.5;
 }

@@ -1,12 +1,12 @@
 # Welcome to my markdown previewer
 
-## Here's some of the features it can handle:
+## Features it supports:
 
-It support links: [view source](https://github.com/carlosjasso/fcc-front-end-libraries)
+All supported **GitHub Flavored Markdown** features such as:
 
-Here's some HTML ```<div></div>``` inline code
+- Inline code like this HTML ```<div></div>``` element.
 
-Code block:
+- Code blocks:
 
 ```javascript
 function showMessage(message){
@@ -14,19 +14,20 @@ function showMessage(message){
 }
 ```
 
-Unordered list:
+- Lists
 
-- item 1
-- item 2
-  - sub item 1
-- item 3
+  - item 1
+  - item 2
+    - sub item 1
+  - item 3
 
-A block quote:
+- Block quotes:
 
 > If it's not broken, don't fix it
 
-Here's an image:
+- Images:
 
-![react logo](https://cdn.iconscout.com/icon/free/png-256/github-153-675523.png)
+![github logo](https://cdn.iconscout.com/icon/free/png-256/github-153-675523.png)
 
-And text can be **bold** in markdown, too
+
+Would you like to checkout the [source code](https://github.com/carlosjasso/fcc-front-end-libraries)?
