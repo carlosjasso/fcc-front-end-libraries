@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+.page-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    min-width: 100vw;
+    min-height: 100vh;
+    background: purple;
+    font-size: 1.6rem;
+    font-family: 'Fredoka One', cursive;
+
+    .drum-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 696px;
+        height: 348px;
+        background: white;
+
+        .pad-section {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            width: 50%;
+            height: 100%;
+            align-items: center;
+            justify-content: space-evenly;
+            background: gray;
+        }
+
+        .controls-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            width: 50%;
+            height: 100%;
+            
+            .display {
+                margin: 8px auto;
+                padding: 8px;
+                width: 316px;
+                border-radius: 5px;
+                background: gray;
+                font-family: 'Press Start 2P', cursive;
+                text-align: center;
+            }
+
+            .power-control {
+                display: inherit;
+                margin: 8px auto;
+
+                .power-tag {
+                    display: flex;
+                    align-items: center;
+                    margin-right: 8px;
+                }
+            }
+
+            .volume-control {
+                display: inherit;
+                margin: 8px auto;
+
+                .volume-tag {
+                    display: flex;
+                    align-items: center;
+                    margin-right: 8px;
+                }
+            }
+        }
+    }
+}
+
+.pad-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    font-size: 3.2rem;
+    box-shadow: 4px 4px 4px 2px rgba(0, 0, 0, 0.250);
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+// source: https://www.w3schools.com/howto/howto_css_switch.asp
+.switch {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    height: 34px;
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+      }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+    }
+
+    input:checked + .slider {
+        background-color: purple;
+    }
+
+    input:focus + .slider {
+        box-shadow: 0 0 1px purple;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(26px);
+    }
+
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+}
+
+// source: https://www.cssportal.com/style-input-range/
+.volume-slider {
+    height: 25px;
+    appearance: none;
+    margin: 10px 0;
+    width: 100%;
+
+    &:focus {
+        outline: none;
+    }
+
+    @mixin track {
+        width: 100%;
+        height: 5px;
+        cursor: pointer;
+        animate: 0.2s;
+        box-shadow: 0px 0px 0px #000000;
+        border-radius: 1px;
+        border: 0px solid #000000;
+        background: gray;
+    }
+
+    &::-webkit-slider-runnable-track {
+        @include track();
+    }
+
+    &:focus::-webkit-slider-runnable-track {
+        background: gray;
+    }
+
+    &::-moz-range-track {
+        @include track();  
+    }
+
+    &::-ms-track {
+        @include track();
+    }
+
+    @mixin thumb {
+        appearance: none;
+        box-shadow: 0px 0px 0px #000000;
+        border: 1px solid gray;
+        height: 18px;
+        width: 18px;
+        border-radius: 25px;
+        background: gray;
+        cursor: pointer;
+        margin-top: -7px;
+    }
+
+    &::-webkit-slider-thumb {
+        @include thumb();
+    }
+
+    &::-moz-range-thumb {
+        @include thumb();
+    }
+
+    &::-ms-thumb {
+        @include thumb();
+    }
+
+    &::-ms-fill-lower {
+        background: gray;
+        border: 0px solid #000000;
+        border-radius: 2px;
+        box-shadow: 0px 0px 0px #000000;
+    }
+
+    &::-ms-fill-upper {
+        background: gray;
+        border: 0px solid #000000;
+        border-radius: 2px;
+        box-shadow: 0px 0px 0px #000000;
+    }
+
+    &:focus::-ms-fill-lower {
+    background: gray;
+    }
+
+    &:focus::-ms-fill-upper {
+    background: gray;
+    }
+}

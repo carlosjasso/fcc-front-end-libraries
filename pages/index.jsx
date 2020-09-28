@@ -16,6 +16,9 @@ export default function Home() {
                 <li>
                     <Link href="/markdown"><a>Markdown Previewer</a></Link>
                 </li>
+                <li>
+                    <Link href="/drums"><a>Drum Machine</a></Link>
+                </li>
             </ul>
         </div>
     );
