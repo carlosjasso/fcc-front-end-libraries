@@ -23,7 +23,10 @@ function stopSounds() {
 
 function updateDisplay(message) {
     const display = document.getElementById("display");
-    display.innerText = message;
+    const isOn = document.getElementById("power-switch").checked;
+    if (isOn) {
+        display.innerText = message;
+    }
 }
 
 export default class Drums extends React.Component {
@@ -270,11 +273,12 @@ class SlideButton extends React.Component {
     }
 
     handleChange() {
+        const display = document.getElementById("display");
         const isOn = document.getElementById("power-switch").checked;
         if (isOn) {
-            updateDisplay("Ready!");
+            display.innerText = "Ready!";
         } else {
-            updateDisplay("Machine is off");
+            display.innerText = "Machine is off";
             stopSounds();
         }
     }
