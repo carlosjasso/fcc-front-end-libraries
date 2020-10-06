@@ -1,17 +1,22 @@
 .page-container {
     display: flex;
     flex-direction: row;
-    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
     width: 100vw;
     height: 100vh;
-    background: #ccc;
-    background-image: url("/img/math-background.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    filter: blur(4px);
-}
-
-.donas-bimbo {
-    color: white;
+    background: transparent;
+    
+    .wallpaper {
+        position: absolute;
+        z-index: -1;
+        width: 100vw;
+        height: 100vh;
+        background: #ccc;
+        background-image: url("/img/math-background.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        filter: blur(4px);
+    }
 }

@@ -10,16 +10,9 @@ export default class Calculator extends React.Component {
     render() {
         return (
             <main className={Styles["page-container"]}>
-                <Donas />
+                <img className={Styles["wallpaper"]} />
+                <h1>Hello World!</h1>
             </main>
         );
     }
-}
-
-function Donas(props) {
-    return (
-        <div className={Styles["donas-bimbo"]}>
-            <h1>Hello World!</h1>
-        </div>
-    );
 }
