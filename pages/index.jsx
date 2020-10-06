@@ -19,6 +19,9 @@ export default function Home() {
                 <li>
                     <Link href="/drums"><a>Drum Machine</a></Link>
                 </li>
+                <li>
+                    <Link href="/calc"><a>Calculator</a></Link>
+                </li>
             </ul>
         </div>
     );
