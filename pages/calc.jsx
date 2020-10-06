@@ -1,17 +1,194 @@
 import React from "react";
 import Head from "next/head";
 import Styles from "@styles/calc.module.scss";
+import AppendFCCScript from "@lib/appendFCCScript";
+
+const buttonType = {
+    numeric: 0,
+    operator: 1,
+    result: 2,
+    clear: 3,
+    interface: 4,
+    extra: 5
+}
+
+const buttons = {
+    0: {
+        name: "zero",
+        symbol: "0",
+        type: buttonType.numeric
+    },
+    1: {
+        name: "one",
+        symbol: "1",
+        type: buttonType.numeric
+    },
+    2: {
+        name: "two",
+        symbol: "2",
+        type: buttonType.numeric
+    },
+    3: {
+        name: "three",
+        symbol: "3",
+        type: buttonType.numeric
+    },
+    4: {
+        name: "four",
+        symbol: "4",
+        type: buttonType.numeric
+    },
+    5: {
+        name: "five",
+        symbol: "5",
+        type: buttonType.numeric
+    },
+    6: {
+        name: "six",
+        symbol: "6",
+        type: buttonType.numeric
+    },
+    7: {
+        name: "seven",
+        symbol: "7",
+        type: buttonType.numeric
+    },
+    8: {
+        name: "eight",
+        symbol: "8",
+        type: buttonType.numeric
+    },
+    9: {
+        name: "nine",
+        symbol: "9",
+        type: buttonType.numeric
+    },
+    10: {
+        name: "decimal",
+        symbol: ".",
+        type: buttonType.numeric
+    },
+    11: {
+        name: "add",
+        symbol: "+",
+        type: buttonType.operator
+    },
+    12: {
+        name: "subtract",
+        symbol: "-",
+        type: buttonType.operator
+    },
+    13: {
+        name: "multiply",
+        symbol: "*",
+        type: buttonType.operator
+    },
+    14: {
+        name: "divide",
+        symbol: "/",
+        type: buttonType.operator
+    },
+    15: {
+        name: "equals",
+        symbol: "=",
+        type: buttonType.result
+    },
+    16: {
+        name: "clear",
+        symbol: "AC",
+        type: buttonType.clear
+    },
+    17: {
+        name: "cancel",
+        symbol: "C",
+        type: buttonType.interface
+    },
+    18: {
+        name: "delete",
+        symbol: "Del",
+        type: buttonType.interface
+    },
+    19: {
+        name: "github",
+        symbol: "GH",
+        type: buttonType.extra
+    }
+}
+
+function Button(button) {
+    const { button: { name, symbol, type }  } = button;
+    let style = "";
+    switch (type) {
+        case buttonType.numeric: style = "numeric"; break;
+        case buttonType.operator: style = "operator"; break;
+        case buttonType.result: style = "result"; break;
+        case buttonType.clear: style = "clear"; break;
+        case buttonType.interface: style = "interface"; break;
+        case buttonType.extra: style = "extra"; break;
+    }
+
+    return (
+        <button id={name} className={Styles[style]}>
+            {symbol}
+        </button>
+    );
+}
+
+function Screen() {
+    return (
+        <section id="display" className={Styles["display"]}>
+            <div className={Styles["top"]}>
+                0
+            </div>
+            <div className={Styles["bottom"]}>
+                0
+            </div>
+        </section>
+    );
+}
+
+function Pad() {
+    const order = [
+        16, 17, 18, 19,
+        7,  8,  9,  14,
+        4,  5,  6,  13,
+        1,  2,  3,  12,
+        10, 0,  15, 11
+    ];
+    const pad = order.map(id => {
+        return <Button button={buttons[id]} key={id} />
+    });
+
+    return (
+        <section className={Styles["pad"]}>
+            {pad.map(button => button)}
+        </section>
+    );
+}
 
 export default class Calculator extends React.Component {
     constructor(props) {
         super(props);
     }
 
+    // Element lifecycle
+    componentDidMount() {
+        AppendFCCScript();
+    }
+
     render() {
+        
+
         return (
             <main className={Styles["page-container"]}>
+                <Head>
+                    <title>FCC: Javascript Calculator</title>
+                </Head>
                 <img className={Styles["wallpaper"]} />
-                <h1>Hello World!</h1>
+                <section className={Styles["calculator"]}>
+                    <Screen />
+                    <Pad />
+                </section>
             </main>
         );
     }

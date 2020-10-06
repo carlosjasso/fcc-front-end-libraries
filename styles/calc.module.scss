@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
 .page-container {
     display: flex;
     flex-direction: row;
@@ -5,18 +8,96 @@
     justify-content: center;
     width: 100vw;
     height: 100vh;
-    background: transparent;
     
     .wallpaper {
         position: absolute;
         z-index: -1;
         width: 100vw;
         height: 100vh;
-        background: #ccc;
+        background: #ddd;
         background-image: url("/img/math-background.jpg");
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
-        filter: blur(4px);
+        filter: blur(6px);
+    }
+
+    .calculator {
+        width: 320px;
+        border-radius: 5px;
+        padding: 8px;
+        background: black;
+        box-shadow: 0px 0px 6px 8px rgba(204, 204, 204, 0.75);
+        border: 1px solid gray;
+
+        .display {
+            font-family: 'VT323', monospace;
+            background: purple;
+            width: 100%;
+        
+            .top {
+                text-align: right;
+                font-weight: bold;
+                font-size: 18pt;
+                color: chocolate;
+            }
+        
+            .bottom {
+                text-align: right;
+                font-weight: bold;
+                font-size: 24pt;
+                color: white;
+            }
+        }
+
+        .pad {
+            margin-top: 8px;
+
+            @mixin button($background, $shadow) {
+                font-size: 2.2rem;
+                border: none;
+                padding: 0;
+                font-family: 'Poppins', sans-serif;
+                border-radius: 5px;
+                background: $background;
+                box-shadow: 0px 4px 0px 0px $shadow;
+            }
+
+            .numeric {
+                $background: #90a4ae;
+                $shadow: #6b8694;
+                @include button($background, $shadow);
+            }
+
+            .operator {
+                $background: #546e7a;
+                $shadow: #3f525a;
+                @include button($background, $shadow);
+            }
+
+            .result {
+                $background: #4caf50;
+                $shadow: #3e8e41;
+                @include button($background, $shadow);
+            }
+
+            .clear {
+                $background: #f44336;
+                $shadow: #c2160a;
+                @include button($background, $shadow);
+            }
+            
+            .interface {
+                $background: #ff9800;
+                $shadow: #cc7a00;
+                @include button($background, $shadow);
+            }
+
+            .extra {
+                $background: #0070c0;
+                $shadow: #005897;
+                @include button($background, $shadow);
+            }
+        }
     }
 }
