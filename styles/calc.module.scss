@@ -32,21 +32,22 @@
 
         .display {
             font-family: 'VT323', monospace;
-            background: purple;
             width: 100%;
         
             .top {
                 text-align: right;
                 font-weight: bold;
-                font-size: 18pt;
+                font-size: 26pt;
                 color: chocolate;
+                overflow: auto;
             }
         
             .bottom {
                 text-align: right;
                 font-weight: bold;
-                font-size: 24pt;
+                font-size: 36pt;
                 color: white;
+                overflow: auto;
             }
         }
 
@@ -116,6 +117,7 @@
                 $background: #0070c0;
                 $shadow: #005897;
                 @include button($background, $shadow);
+                color: white;
             }
         }
     }

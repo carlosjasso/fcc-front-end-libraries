@@ -2,7 +2,6 @@ import React from "react";
 import Head from "next/head";
 import Styles from "@styles/calc.module.scss";
 import AppendFCCScript from "@lib/appendFCCScript";
-import { types } from "react-markdown";
 
 const buttonType = {
     numeric: 0,
@@ -16,114 +15,114 @@ const buttonType = {
 const buttons = {
     0: {
         name: "zero",
-        symbol: "0",
+        value: "0",
         type: buttonType.numeric
     },
     1: {
         name: "one",
-        symbol: "1",
+        value: "1",
         type: buttonType.numeric
     },
     2: {
         name: "two",
-        symbol: "2",
+        value: "2",
         type: buttonType.numeric
     },
     3: {
         name: "three",
-        symbol: "3",
+        value: "3",
         type: buttonType.numeric
     },
     4: {
         name: "four",
-        symbol: "4",
+        value: "4",
         type: buttonType.numeric
     },
     5: {
         name: "five",
-        symbol: "5",
+        value: "5",
         type: buttonType.numeric
     },
     6: {
         name: "six",
-        symbol: "6",
+        value: "6",
         type: buttonType.numeric
     },
     7: {
         name: "seven",
-        symbol: "7",
+        value: "7",
         type: buttonType.numeric
     },
     8: {
         name: "eight",
-        symbol: "8",
+        value: "8",
         type: buttonType.numeric
     },
     9: {
         name: "nine",
-        symbol: "9",
+        value: "9",
         type: buttonType.numeric
     },
     10: {
         name: "decimal",
-        symbol: ".",
+        value: ".",
         type: buttonType.numeric
     },
     11: {
         name: "add",
-        symbol: "+",
+        value: "+",
         type: buttonType.operator
     },
     12: {
         name: "subtract",
-        symbol: "-",
+        value: "-",
         type: buttonType.operator
     },
     13: {
         name: "multiply",
-        symbol: "*",
+        value: "*",
         type: buttonType.operator
     },
     14: {
         name: "divide",
-        symbol: "/",
+        value: "/",
         type: buttonType.operator
     },
     15: {
         name: "equals",
-        symbol: "=",
+        value: "=",
         type: buttonType.result
     },
     16: {
         name: "clear",
-        symbol: "AC",
+        value: "AC",
         type: buttonType.clear
     },
     17: {
         name: "cancel",
-        symbol: "C",
+        value: "C",
         type: buttonType.interface
     },
     18: {
         name: "delete",
-        symbol: "Del",
+        value: "Del",
         type: buttonType.interface
     },
     19: {
         name: "github",
-        symbol: "GH",
+        value: "GH",
         type: buttonType.extra
     }
 }
 
-function Screen() {
+function Screen({ top, bottom }) {
     return (
         <section id="display" className={Styles["display"]}>
-            <div className={Styles["top"]}>
-                0
+            <div id="display-top" className={Styles["top"]}>
+                {top}
             </div>
-            <div className={Styles["bottom"]}>
-                0
+            <div id="display-bottom" className={Styles["bottom"]}>
+                {bottom}
             </div>
         </section>
     );
@@ -142,7 +141,7 @@ class Button extends React.Component {
     }
     
     render() {
-        const { name, symbol, type } = this.props.button;
+        const { name, value, type } = this.props.button;
         let style = "";
         switch (type) {
             case buttonType.numeric: style = "numeric"; break;
@@ -155,7 +154,7 @@ class Button extends React.Component {
         
         return (
             <button id={name} className={Styles[style]} onClick={this.handleClick} >
-                {symbol}
+                {value}
             </button>
         );
     }
@@ -202,6 +201,12 @@ export default class Calculator extends React.Component {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+
+        this.state = {
+            cleared: true,
+            displayTop: "0",
+            displayBottom: "0"
+        }
     }
 
     // Element lifecycle
@@ -211,7 +216,29 @@ export default class Calculator extends React.Component {
 
     // Event handlers
     handleClick(button) {
-        console.log(button);
+        switch(button.type) {
+            case buttonType.numeric: this.handleNumericButton(button); break;
+        }
+    }
+
+    // Util Functions
+    handleNumericButton(button) {
+        if (this.state.cleared) {
+            this.setState({ 
+                cleared: false,
+                displayTop: button.value,
+                displayBottom: button.value
+            });
+        } else {
+            const valueTop = `${this.state.displayTop}${button.value}`;
+            const valueBottom = `${this.state.displayBottom}${button.value}`;
+
+            this.setState({ 
+                cleared: false,
+                displayTop: valueTop,
+                displayBottom: valueBottom
+            });
+        }
     }
 
     render() {
@@ -222,7 +249,7 @@ export default class Calculator extends React.Component {
                 </Head>
                 <img className={Styles["wallpaper"]} />
                 <section className={Styles["calculator"]}>
-                    <Screen />
+                    <Screen top={this.state.displayTop} bottom={this.state.displayBottom} />
                     <Pad clickHandler={this.handleClick} />
                 </section>
             </main>
