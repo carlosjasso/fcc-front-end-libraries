@@ -115,14 +115,14 @@ const buttons = {
     }
 }
 
-function Screen({ top, bottom }) {
+function Screen({ history, input }) {
     return (
         <section className={Styles["display"]}>
-            <div className={Styles["top"]}>
-                {top}
+            <div className={Styles["history"]}>
+                {history}
             </div>
-            <div id="display" className={Styles["bottom"]}>
-                {bottom}
+            <div id="display" className={Styles["input"]}>
+                {input}
             </div>
         </section>
     );
@@ -203,8 +203,9 @@ export default class Calculator extends React.Component {
         this.handleClick = this.handleClick.bind(this);
 
         this.state = {
-            displayTop: "0",
-            displayBottom: "0",
+            history: "0",
+            input: "0",
+            lastOperator: null,
             result: 0
         }
     }
@@ -225,69 +226,68 @@ export default class Calculator extends React.Component {
 
     // Util Functions
     handleNumericButton(button) {
-        const formula = this.state.displayTop;
-        const isFormulaEmpty = formula == "0";
-        const newFormula = isFormulaEmpty ? button.value : `${formula}${button.value}`;
-
-        const input = this.getNumericValue(this.state.displayBottom);
-        const isFirstInput = input == 0;
-        const newInput = isFirstInput ? button.value : `${input}${button.value}`;
+        const input = this.state.input;
+        let inputUpdate = "";
+        if (input == "0") {
+            switch(button.value) {
+                case "0" : 
+                    inputUpdate = button.value;
+                    break
+                case ".":
+                    inputUpdate = "0.";
+                    break;
+                default: 
+                    inputUpdate = button.value;
+                    break;
+            }
+        } else {
+            switch(button.value) {
+                case ".": 
+                    if (input.includes(".")) {
+                        inputUpdate = input;
+                    } else {
+                        inputUpdate = `${input}${button.value}`;
+                    }
+                    break;
+                default: 
+                    inputUpdate = `${input}${button.value}`;
+                    break;
+            }
+        }
 
         this.setState({
-            displayTop: newFormula,
-            displayBottom: newInput
+            input: inputUpdate
         });
     }
 
     handleOperatorButton(button) {
-        const formula = this.state.displayTop;
-        const input = this.getNumericValue(this.state.displayBottom);
-        let result = this.state.result;
-        const isFirstInput = result == 0;
-
-        switch(button) {
-            case buttons[11]: 
-                result = result + input;
-            break;
-            case buttons[12]: 
-                result = result - input;
-            break;
-            case buttons[13]: 
-                result = result * input;
-            break;
-            case buttons[14]: 
-                result = result / input;
-            break;
-        }
-
-        if (isFirstInput) {
-            this.setState({
-                displayTop: `${formula}${button.value}`,
-                displayBottom: `0`,
-                result: result
-            });
+        // 11 +
+        // 12 -
+        // 13 *
+        // 14 /
+        const history = this.state.history;
+        const input = this.state.input;
+        let stateUpdate = this.state;
+        stateUpdate.input = "0";
+        if (history == "0") {
+            stateUpdate.history = `${input}${button.value}`;
         } else {
-            this.setState({
-                displayTop: `${formula}${button.value}${input}`,
-                displayBottom: `${result}`,
-                result: result
-            });
+            stateUpdate.history = `${history}${input}${button.value}`;
         }
+
+        this.setState(stateUpdate);
     }
 
     handleClearButton() {
         this.setState({
-            displayTop: "0",
-            displayBottom: "0",
+            history: "0",
+            input: "0",
+            nextOperation: null,
             result: 0
         });
     }
 
     getNumericValue(value) {
-        if (value.endsWith(".")) {
-            value = input.slice(0, -1);
-        }
-
         const isDecimal = value.includes(".");
 
         if (isDecimal) {
@@ -305,7 +305,7 @@ export default class Calculator extends React.Component {
                 </Head>
                 <img className={Styles["wallpaper"]} />
                 <section className={Styles["calculator"]}>
-                    <Screen top={this.state.displayTop} bottom={this.state.displayBottom} />
+                    <Screen history={this.state.history} input={this.state.input} />
                     <Pad clickHandler={this.handleClick} />
                 </section>
             </main>

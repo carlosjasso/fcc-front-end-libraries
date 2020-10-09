@@ -14,8 +14,8 @@
         z-index: -1;
         width: 100vw;
         height: 100vh;
-        background: #ddd;
-        background-image: url("/img/math-background.jpg");
+        background: rgb(131, 128, 128);
+        background-image: url("/img/math-wallpaper.jpg");
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -34,7 +34,7 @@
             font-family: 'VT323', monospace;
             width: 100%;
         
-            .top {
+            .history {
                 text-align: right;
                 font-weight: bold;
                 font-size: 26pt;
@@ -42,7 +42,7 @@
                 overflow: auto;
             }
         
-            .bottom {
+            .input {
                 text-align: right;
                 font-weight: bold;
                 font-size: 36pt;
