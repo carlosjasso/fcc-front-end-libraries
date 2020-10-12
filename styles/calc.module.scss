@@ -41,13 +41,25 @@
                 color: chocolate;
                 overflow: auto;
             }
-        
-            .input {
-                text-align: right;
+
+            .bottom {
+                display: flex;
+                flex-direction: row;
                 font-weight: bold;
                 font-size: 36pt;
                 color: white;
-                overflow: auto;
+
+                .negative {
+                    background: purple;
+                    text-align: right;
+                }
+            
+                .input {
+                    background: green;
+                    width: 100%;
+                    text-align: right;
+                    overflow: auto;
+                }
             }
         }
 
