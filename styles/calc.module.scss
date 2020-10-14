@@ -42,24 +42,12 @@
                 overflow: auto;
             }
 
-            .bottom {
-                display: flex;
-                flex-direction: row;
+            .input {
                 font-weight: bold;
                 font-size: 36pt;
                 color: white;
-
-                .negative {
-                    background: purple;
-                    text-align: right;
-                }
-            
-                .input {
-                    background: green;
-                    width: 100%;
-                    text-align: right;
-                    overflow: auto;
-                }
+                text-align: right;
+                overflow: auto;
             }
         }
 

@@ -121,13 +121,8 @@ function Screen({ history, input, positive }) {
             <div className={Styles["history"]}>
                 {history}
             </div>
-            <div className={Styles["bottom"]}>
-                {!positive && <div className={Styles["negative"]}>
-                    -
-                </div>}
-                <div id="display" className={Styles["input"]}>
-                    {input}
-                </div>
+            <div id="display" className={Styles["input"]}>
+                {positive ? input : `-${input}`}
             </div>
         </section>
     );
@@ -185,16 +180,17 @@ class Pad extends React.Component {
             "1",  "2",  "3",  "-",
             ".",  "0",  "=",  "+"
         ];
+
         const pad = padOrder.map(value => {
             const padButton = buttons.filter(button => button.value == value)[0];
             return (
                 <Button 
-                button={padButton} 
-                clickHandler={this.handleClick}
-                key={padButton.value} />
+                    button={padButton} 
+                    clickHandler={this.handleClick}
+                    key={padButton.value} />
             );
         });
-    
+
         return (
             <section className={Styles["pad"]}>
                 {pad.map(button => button)}
@@ -209,13 +205,13 @@ export default class Calculator extends React.Component {
         this.handleClick = this.handleClick.bind(this);
 
         this.state = {
+            result: 0,
             history: "0",
             input: "0",
-            cleared: true,
             lastOperator: null,
             positive: true,
-            result: 0
-        }
+            cleared: true
+        };
     }
 
     // Element lifecycle
@@ -229,132 +225,85 @@ export default class Calculator extends React.Component {
             case buttonType.numeric: this.handleNumericButton(button); break;
             case buttonType.operator: this.handleOperatorButton(button); break;
             case buttonType.clear: this.handleClearButton(); break;
-            case buttonType.equals: this.handleEqualsButton(button); break;
+            case buttonType.equals: this.handleOperatorButton(button); break;
         }
     }
 
     // Util Functions
     handleNumericButton(button) {
         const input = this.state.input;
-        let stateUpdate = this.state;
-        if (this.state.cleared) {
-            switch(button.value) {
-                case ".":
-                    stateUpdate.input = "0.";
-                    stateUpdate.cleared = false;
-                    break;
-                case "0":
-                    stateUpdate.input = button.value;
-                    stateUpdate.cleared = true;
-                    break;
-                default:
-                    stateUpdate.input = button.value;
-                    stateUpdate.cleared = false;
-                    break;
-            };
-        } else {
-            switch(button.value) {
-                case ".":
-                    stateUpdate.input = input.includes(".") ? input : `${input}${button.value}`;
-                    break;
-                case "0":
-                    if (input == 0) {
-                        stateUpdate.input = button.value;
-                        stateUpdate.cleared = true;
-                    } else {
-                        stateUpdate.input = `${input}${button.value}`;
-                    }
-                    break;
-                default: 
-                    stateUpdate.input = `${input}${button.value}`;
-                    break;
-            };
-        }
+        let state = this.state;
 
-        this.setState(stateUpdate);
+        if (this.state.lastOperator == null && this.state.cleared) state.history = "0";
+
+        switch(button.value) {
+            case ".":
+                if (input.includes(".")) return;
+                state.input = this.state.cleared ? "0." : `${input}${button.value}`;
+                state.cleared = false;
+                break;
+            case "0":
+                if (this.state.cleared || input == "0") return;
+                state.input = `${input}${button.value}`;
+                state.cleared = false;
+                break;
+            default:
+                state.input = this.state.cleared ? button.value : `${input}${button.value}`
+                state.cleared = false;
+                break;
+        };
+
+        this.setState(state);
     }
 
     handleClearButton() {
         this.setState({
+            result: 0,
             history: "0",
             input: "0",
-            cleared: true,
             lastOperator: null,
-            result: 0
+            positive: true,
+            cleared: true
         });
     }
 
     handleOperatorButton(button) {
-        const history = this.state.history;
         const input = this.state.input;
-        const numericInput = this.getNumericValue(input);
-        const operators = buttons.filter(button => button.type == buttonType.operator);
-        const substractButton = buttons.filter(button => button.value == "-")[0];
-        let stateUpdate = this.state;
+        let state = this.state;
 
         if (this.state.lastOperator == null) {
-            stateUpdate.lastOperator = button;
-            stateUpdate.history = `${input}${button.value}`;
-            stateUpdate.input = "0";
-            stateUpdate.cleared = true;
-            stateUpdate.result = numericInput;
-        } else if(button == substractButton) {
-            stateUpdate.positive = !this.state.positive;
+            if (button.value == "=") return;
+            
+            state.result = this.getNumericValue(input);
+            state.history = `${input}${button.value}`;
+            state.input = "0";
+            state.lastOperator = button;
+            state.positive = true;
+            state.cleared = true;
+        } else if (this.state.cleared && button.value == "-") {
+            state.positive = !this.state.positive;
+        } else if (this.state.cleared) {
+            state.history = `${this.state.history.slice(0, -1)}${button.value}`;
+            state.lastOperator = button;
+            state.positive = true;
         } else {
-            const lastChar = history.slice(-1);
-            const isLastCharOperator = operators.filter(button => button.value == lastChar).length > 0;
-            const isNotEquals = button.type != buttonType.equals;
-            if (this.state.cleared && isLastCharOperator && isNotEquals) {
-                stateUpdate.lastOperator = button;
-                stateUpdate.history = isNotEquals ? `${history.slice(0, -1)}${button.value}` : `${history.slice(0, -1)}${button.value}${this.state.result}`;
-            } else {
-                switch(this.state.lastOperator.value) {
-                    case "+":
-                        stateUpdate.result = this.state.result + numericInput;
-                        break;
-                    case "-":
-                        stateUpdate.result = this.state.result - numericInput;
-                        break;
-                    case "*":
-                        stateUpdate.result = this.state.result * numericInput;
-                        break;
-                    case "/":
-                        stateUpdate.result = this.state.result / numericInput;
-                        break;
-                }
-                if (isNotEquals) {
-                    stateUpdate.history = `${history}${input}${button.value}`;
-                    stateUpdate.input = `${stateUpdate.result}`;
-                    stateUpdate.cleared = true;
-                    stateUpdate.lastOperator = button;
-                } else {
-                    stateUpdate.history = `${history}${input}${button.value}${this.state.result}`;
-                    stateUpdate.input = `${stateUpdate.result}`;
-                    stateUpdate.cleared = true;
-                    stateUpdate.lastOperator = null;
-                }
-            }
+            const isButtonEquals = button.value == "=";
+
+            state.result = eval(`${this.state.result} ${this.state.lastOperator.value} ${this.getNumericValue(input)}`);
+            state.history = `${this.state.history}${this.state.positive ? input : `(-${input})`}${button.value}`;
+            state.input = isButtonEquals ? `${state.result}` : "0";
+            state.lastOperator = isButtonEquals ? null : button;
+            state.positive = true;
+            state.cleared = true;
         }
 
-        this.setState(stateUpdate);
-    }
-
-    handleEqualsButton(button) {
-        if (this.state.lastOperator == null) {
-            return;
-        } else {
-            this.handleOperatorButton(button);
-        }
+        this.setState(state);
     }
 
     getNumericValue(value) {
         const isDecimal = value.includes(".");
-
-        if (isDecimal) {
-            return parseFloat(value);
-        } else {
-            return parseInt(value);
-        }
+        const parsed = isDecimal ? parseFloat(value) : parseInt(value);
+        return this.state.positive ? parsed : (parsed * -1);;
     }
 
     render() {
@@ -366,9 +315,9 @@ export default class Calculator extends React.Component {
                 <img className={Styles["wallpaper"]} />
                 <section className={Styles["calculator"]}>
                     <Screen 
-                    history={this.state.history} 
-                    input={this.state.input} 
-                    positive={this.state.positive} />
+                        history={this.state.history} 
+                        input={this.state.input} 
+                        positive={this.state.positive} />
                     <Pad clickHandler={this.handleClick} />
                 </section>
             </main>
