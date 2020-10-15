@@ -95,7 +95,7 @@
                 @include button($background, $shadow);
             }
 
-            .result {
+            .equals {
                 $background: #4caf50;
                 $shadow: #3e8e41;
                 @include button($background, $shadow);
@@ -117,7 +117,15 @@
                 $background: #0070c0;
                 $shadow: #005897;
                 @include button($background, $shadow);
-                color: white;
+
+                i {
+                    display: flex;
+                    justify-content: center;
+
+                    svg {
+                        height: 28px;
+                    }
+                }
             }
         }
     }
