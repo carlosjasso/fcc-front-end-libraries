@@ -9,11 +9,11 @@ $start-color: #222222;
     justify-content: center;
     min-width: 100vw;
     height: 100vh;
-    background: $start-color;
+    transition: 0.5s;
 
     .quote-box {
         background: white;
-        color: $start-color;
+        transition: 0.5s;
         min-width: 300px;
         max-width: 740px;
         min-height: 240px;
@@ -47,10 +47,6 @@ $start-color: #222222;
                 &:last-child {
                     margin-left: 8px;
                 }
-
-                .less-opacity {
-                    opacity: 0.7;
-                }
             }
 
             .author {
@@ -70,7 +66,7 @@ $start-color: #222222;
             font-family: 'Rubik', sans-serif;
 
             .button {
-                background: $start-color;
+                transition: 0.5s;
                 color: white;
                 font-size: 1.4rem;
                 padding: 8px;
@@ -79,7 +75,7 @@ $start-color: #222222;
                 justify-content: center;
                 
                 &:hover {
-                    cursor: default;
+                    cursor: pointer;
                     opacity: 0.9;
                 }
 
@@ -102,4 +98,8 @@ $start-color: #222222;
     .no-opacity {
         opacity: 0;
     }
+}
+
+.less-opacity {
+    opacity: 0.7;
 }
