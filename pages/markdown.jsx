@@ -130,7 +130,7 @@ export default class MarkdownPPreviewer extends React.Component {
         return (
             <main id="container" className={Styles.container}>
                 <Head>
-                    <title>FCC: Markdown Previewer</title>
+                    <title>Markdown Previewer</title>
                 </Head>
                 <section id={this.SECTION.EDITOR} className={`${Styles["editor-section"]} ${Styles["no-opacity"]}`}>
                     <div className={Styles["section-title"]}>

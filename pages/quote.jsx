@@ -193,7 +193,7 @@ export default class Quote extends React.Component{
         return (
             <main id="background" className={Styles.container} style={{background: this.state.color}} >
                 <Head>
-                    <title>FCC: Random Quote Machine</title>
+                    <title>Random Quote Machine</title>
                 </Head>
                 <section id="quote-box" className={`${Styles["quote-box"]} ${Styles["no-opacity"]}`} style={{color: this.state.color}}>
                     <div style={{flexGrow: 1}} />

@@ -4,28 +4,150 @@ import Styles from "@styles/drums.module.scss";
 import Head from "next/head";
 import Link from "next/link";
 
-//colors: https://coolors.co/36419a-b82b7a-981a25-f7bd01-2091b3-87b02c-cd8227-00635d-bdb4bf
+// colors: https://coolors.co/36419a-b82b7a-981a25-f7bd01-2091b3-87b02c-cd8227-00635d-bdb4bf
 
-function playSound(key) {
-    const sound = document.getElementById(key);
-    sound.currentTime= 0;
-    const volume = parseFloat(document.getElementById("volume-slider").value);
-    sound.volume = volume;
-    sound.play();
-}
+const buttons =  {
+    Q: {
+        id: "Air-Horn",
+        sound: "/sounds/Air-Horn.mp3",
+        duration: 1535,
+        activeColor:"#36419a"
+    },
+    W: {
+        id: "Snap-Flow",
+        sound: "/sounds/Snap-Flow.mp3",
+        duration: 250,
+        activeColor:"#b82b7a"
+    },
+    E: {
+        id: "Tin-Can-Bell",
+        sound: "/sounds/Tin-Can-Bell.mp3",
+        duration: 284,
+        activeColor:"#981a25"
+    },
+    A: {
+        id: "Cymbal-Sold",
+        sound: "/sounds/Cymbal-Sold.mp3",
+        duration: 89,
+        activeColor:"#f7bd01"
+    },
+    S: {
+        id: "Cymbal-AllMe",
+        sound: "/sounds/Cymbal-AllMe.mp3",
+        duration: 236,
+        activeColor:"#2091b3"
+    },
+    D: {
+        id: "Clap-Apollo",
+        sound: "/sounds/Clap-Apollo.mp3",
+        duration: 502,
+        activeColor:"#87b02c"
+    },
+    Z: {
+        id: "Kick-HouseThud",
+        sound: "/sounds/Kick-HouseThud.mp3",
+        duration: 361,
+        activeColor:"#cd8227"
+    },
+    X: {
+        id: "Kick-Boost",
+        sound: "/sounds/Kick-Boost.mp3",
+        duration: 301,
+        activeColor:"#00635d"
+    },
+    C: {
+        id: "Snare-Champion",
+        sound: "/sounds/Snare-Champion.mp3",
+        duration: 404,
+        activeColor:"#bdb4bf"
+    }
+};
 
-function stopSounds() {
-    const sounds = document.getElementsByClassName("clip");
-    for (let sound of sounds) {
+class PadButton extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isClicked: false
+        }
+
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick(event) {
+        const sound = event.target.lastChild;
+
+        if (!this.props.power) return;
+
+        if (this.props.volume == 0) {
+            this.props.updateDisplay("Machine's muted");
+            return;
+        }
+
+        this.setState({ isClicked: true });
+        
         sound.pause();
+        sound.volume = this.props.volume;
+        sound.currentTime= 0;
+        sound.play();
+
+        this.props.updateDisplay(this.props.id.replace(/-/g, " "), this.props.duration);
+
+        setTimeout(() => this.setState({ isClicked: false }), this.props.duration);
+    }
+
+    render() {
+        const background = {
+            background: this.props.activeColor
+        };
+
+        return (
+            <div 
+                id={this.props.id}
+                className={`drum-pad ${Styles["pad-button"]}`} // the "drum-pad" class is for passing the FCC
+                onClick={this.handleClick}
+                style={this.state.isClicked ? background : null}
+            >
+                {this.props.text}
+                <audio id={this.props.text} src={this.props.sound} className={"clip"} preload={"auto"} />
+            </div>
+        )
     }
 }
 
-function updateDisplay(message) {
-    const display = document.getElementById("display");
-    const isOn = document.getElementById("power-switch").checked;
-    if (isOn) {
-        display.innerText = message;
+class Pad extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.updateDisplay = this.updateDisplay.bind(this);
+    }
+
+    updateDisplay() {
+        this.props.updateDisplay(...arguments);
+    }
+
+    render() {
+        const padButtons = [];
+        for (const key of Object.keys(buttons)) {
+            const button = buttons[key];
+            padButtons.push(
+                <PadButton
+                    id={button.id}
+                    text={key}
+                    sound={button.sound}
+                    duration={button.duration}
+                    activeColor={button.activeColor}
+                    power={this.props.power}
+                    volume={this.props.volume}
+                    updateDisplay={this.updateDisplay}
+                    key={key} />
+            )
+        }
+
+        return (
+            <section className={Styles["pad-section"]}>
+                {padButtons.map(button => button)}
+            </section>
+        );
     }
 }
 
@@ -33,159 +155,104 @@ export default class Drums extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            buttons: {
-                Q: {
-                    id: "Air-Horn",
-                    sound: "/sounds/Air-Horn.mp3",
-                    duration: 1535,
-                    activeColor:"36419a",
-                    isActive: false
-                },
-                W: {
-                    id: "Snap-Flow",
-                    sound: "/sounds/Snap-Flow.mp3",
-                    duration: 250,
-                    activeColor:"b82b7a",
-                    isActive: false
-                },
-                E: {
-                    id: "Tin-Can-Bell",
-                    sound: "/sounds/Tin-Can-Bell.mp3",
-                    duration: 284,
-                    activeColor:"981a25",
-                    isActive: false
-                },
-                A: {
-                    id: "Cymbal-Sold",
-                    sound: "/sounds/Cymbal-Sold.mp3",
-                    duration: 89,
-                    activeColor:"f7bd01",
-                    isActive: false
-                },
-                S: {
-                    id: "Cymbal-AllMe",
-                    sound: "/sounds/Cymbal-AllMe.mp3",
-                    duration: 236,
-                    activeColor:"2091b3",
-                    isActive: false
-                },
-                D: {
-                    id: "Clap-Apollo",
-                    sound: "/sounds/Clap-Apollo.mp3",
-                    duration: 502,
-                    activeColor:"87b02c",
-                    isActive: false
-                },
-                Z: {
-                    id: "Kick-HouseThud",
-                    sound: "/sounds/Kick-HouseThud.mp3",
-                    duration: 361,
-                    activeColor:"cd8227",
-                    isActive: false
-                },
-                X: {
-                    id: "Kick-Boost",
-                    sound: "/sounds/Kick-Boost.mp3",
-                    duration: 301,
-                    activeColor:"00635d",
-                    isActive: false
-                },
-                C: {
-                    id: "Snare-Champion",
-                    sound: "/sounds/Snare-Champion.mp3",
-                    duration: 404,
-                    activeColor:"bdb4bf",
-                    isActive: false
-                }
-            }
+            power: true,
+            volume: 1,
+            displayMessage: "Ready!"
         }
 
+        this.updateDisplay = this.updateDisplay.bind(this);
+        this.handlePower = this.handlePower.bind(this);
         this.handleKeydown = this.handleKeydown.bind(this);
         this.handleVolumeChange = this.handleVolumeChange.bind(this);
+
+        this.displayDebouncer = null;
     }
 
+    // Component lifecycle
     componentDidMount() {
-        AppendFCCScript();
         document.addEventListener("keydown", this.handleKeydown);
+        AppendFCCScript();
     }
 
     componentWillUnmount() {
         document.removeEventListener("keydown", this.handleKeydown);
     }
 
-    displayDebouncer;
-    handleKeydown(e) {
-        const isOn = document.getElementById("power-switch").checked;
-        if (isOn) {
-            const validKeys = Object.keys(this.state.buttons);
-            const pressedKey = e.key.toUpperCase();
-            const volume = parseFloat(document.getElementById("volume-slider").value);
+    // event handlers
+    handleKeydown(event) {
+        if (!this.state.power) return;
+        
+        const validKeys = Object.keys(buttons);
+        const pressedKey = event.key.toUpperCase();
+        
+        if (validKeys.includes(pressedKey)) {
+            const id = buttons[pressedKey].id;
+            document.getElementById(id).click();
+        }
+    }
 
-            if (validKeys.includes(pressedKey)) {
-                const button = this.state.buttons[pressedKey];
+    handleVolumeChange(event) {
+        let state = this.state;
+        state.volume = event.target.value;
+        this.setState(state);
+        
+        let volumePercentage = Math.floor(event.target.value * 100);
+        this.updateDisplay(`Volume: ${volumePercentage}%`);
+    }
 
-                let newState = this.state.buttons;
-                newState[pressedKey].isActive = true;
-                this.setState(newState);
+    handlePower(event) {
+        let state = this.state;
+        state.power = event.target.checked;
+        state.displayMessage = event.target.checked ? "Ready!" : "X_X Off";
+        this.setState(state);
 
-                if (volume > 0) {
-                    playSound(pressedKey);
-                    updateDisplay(button.id);
-                } else {
-                    updateDisplay("Machine's muted");
-                }
-
-                setTimeout(() => {
-                    newState[pressedKey].isActive = false;
-                    this.setState(newState);
-                }, button.duration);
-
-                const displayTimeout = button.duration > 1000 ? button.duration : 1000;
-                clearTimeout(this.displayDebouncer);
-                this.displayDebouncer = setTimeout(() => updateDisplay("Ready!"), displayTimeout);
+        if (!event.target.checked) {
+            for (let key in buttons) {
+                const id = buttons[key].id;
+                const button = document.getElementById(id);
+                button.style = null;
+                const sound = button.lastChild;
+                sound.pause();
             }
         }
     }
 
-    handleVolumeChange() {
-        let volume = parseFloat(document.getElementById("volume-slider").value);
-        volume = Math.floor(volume * 100);
-        updateDisplay(`Volume: ${volume}`);
-        setTimeout(() => updateDisplay("Ready!"), 1000);
+    // util functions
+    updateDisplay() { // args: [0] message, [1] duration
+        if (!this.state.power) return;
+
+        let state = this.state;
+        state.displayMessage = arguments[0];
+        this.setState(state);
+
+        const lacksSecondArg = typeof(arguments[1]) == "undefined";
+        let duration = lacksSecondArg || arguments[1] < 1000 ? 1000 : arguments[1];
+        clearTimeout(this.displayDebouncer)
+        this.displayDebouncer = setTimeout(() => {
+            state.displayMessage = "Ready!";
+        this.setState(state);
+        }, duration);
     }
 
     render() {
-        const buttonKeys = Object.keys(this.state.buttons);
-        let padButtons = [];
-        for (let i = 0; i < buttonKeys.length; i++) {
-            let button = this.state.buttons[buttonKeys[i]];
-            padButtons.push(
-                <PadButton
-                    id={button.id}
-                    text={buttonKeys[i]}
-                    audio={button.sound}
-                    duration={button.duration}
-                    color={button.isActive ? button.activeColor : "ffffff"}
-                    activeColor={button.activeColor}
-                    key={i} />
-            );
-        }
-
         return (
             <main className={Styles["page-container"]}>
                 <Head>
                     <title>Drum Machine</title>
                 </Head>
                 <section id="drum-machine" className={Styles["drum-container"]} >
-                    <section className={Styles["pad-section"]}>
-                        {padButtons.map(button => button)}
-                    </section>
+                    <Pad power={this.state.power} volume={this.state.volume} updateDisplay={this.updateDisplay} />
                     <section className={Styles["controls-section"]}>
-                        <div className={Styles["power-control"]}>
-                            <span className={Styles["power-tag"]}>Power</span>
-                            <SlideButton />
+                    <div className={Styles["power-control"]}>
+                        <span className={Styles["power-tag"]}>Power</span>
+                        <label className={Styles["switch"]}>
+                            <input type="checkbox" id="power-switch" defaultChecked={true} onChange={this.handlePower} />
+                            <span className={`${Styles["slider"]} ${Styles["round"]}`}></span>
+                        </label>
+                    </div>
+                        <div id="display" className={Styles["display"]}>
+                            {this.state.displayMessage}
                         </div>
-                        <div id="display" className={Styles["display"]}>Ready!</div>
                         <div className={Styles["volume-control"]}>
                             <span className={Styles["volume-tag"]}>Volume</span>
                             <input
@@ -194,7 +261,7 @@ export default class Drums extends React.Component {
                                 min={0}
                                 step={0.01}
                                 type="range"
-                                defaultValue={1}
+                                defaultValue={this.state.volume}
                                 className={Styles["volume-slider"]}
                                 onChange={this.handleVolumeChange} />
                         </div>
@@ -207,89 +274,5 @@ export default class Drums extends React.Component {
                 </section>
             </main>
         )
-    }
-}
-
-class PadButton extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isClicked: false
-        }
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    displayDebouncer;
-    handleClick() {
-        const isOn = document.getElementById("power-switch").checked;
-        if (isOn) {
-            const volume = parseFloat(document.getElementById("volume-slider").value);
-
-            let newState = this.state;
-            newState.isClicked = true;
-            this.setState(newState);
-
-            if (volume > 0) {
-                playSound(this.props.text);
-                updateDisplay(this.props.id);
-            } else {
-                updateDisplay("Machine's muted");
-            }
-
-            setTimeout(() => {
-                newState.isClicked = false;
-                this.setState(newState);
-            }, this.props.duration);
-
-            const displayTimeout = this.props.duration > 1000 ? this.props.duration : 1000;
-            clearTimeout(this.displayDebouncer);
-            this.displayDebouncer = setTimeout(() => updateDisplay("Ready!"), displayTimeout);
-        }
-    }
-
-    render() {
-        const background = {
-            backgroundColor: this.state.isClicked ? `#${this.props.activeColor}` : `#${this.props.color}`
-        };
-
-        return (
-            <div
-                id={this.props.id}
-                className={`drum-pad ${Styles["pad-button"]}`}
-                onClick={this.handleClick}
-                style={background} >
-                    {this.props.text}
-                    <audio id={this.props.text} src={this.props.audio} className={"clip"} />
-            </div>
-        )
-    }
-}
-
-class SlideButton extends React.Component {
-    constructor(props) {
-        super(props);
-        
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange() {
-        const display = document.getElementById("display");
-        const isOn = document.getElementById("power-switch").checked;
-        if (isOn) {
-            display.innerText = "Ready!";
-        } else {
-            display.innerText = "Machine is off";
-            stopSounds();
-        }
-    }
-
-    render() {
-        return(
-            // source: https://www.w3schools.com/howto/howto_css_switch.asp
-            <label className={Styles["switch"]}>
-                <input type="checkbox" id="power-switch" defaultChecked={true} onChange={this.handleChange} />
-                <span className={`${Styles["slider"]} ${Styles["round"]}`}></span>
-            </label>
-        );
     }
 }
