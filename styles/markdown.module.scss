@@ -34,7 +34,7 @@ $screen-breakpoint: 900px;
             font-size: 1.6rem;
             font-weight: bold;
 
-            .button {
+            .titlebar-button {
                 display: inherit;
                 position: absolute;
                 right: .8rem;
@@ -120,5 +120,5 @@ $screen-breakpoint: 900px;
 }
 
 .no-opacity {
-    opacity: 0.5;
+    opacity: 0;
 }
