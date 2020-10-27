@@ -22,6 +22,9 @@ export default function Home() {
                 <li>
                     <Link href="/calc"><a>Calculator</a></Link>
                 </li>
+                <li>
+                    <Link href="/clock"><a>25 + 5 Clock</a></Link>
+                </li>
             </ul>
         </div>
     );

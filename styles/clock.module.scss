@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Turret+Road&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+// font-family: 'Press Start 2P', cursive;
+// font-family: 'Turret Road', cursive;
+// font-family: 'Roboto', sans-serif;
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: teal;
+
+    button {
+        padding: 0;
+        border: none;
+        background: transparent;
+        border-radius: 50px;
+        color: white;
+        transition: .3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        &:focus {
+            outline: none;
+        }
+
+        &.setting {
+            width: 22px;
+            height: 22px;
+            font-size: 2.8rem;
+
+            &:hover {
+                background: darkgray;
+            }
+
+            &:disabled {
+                color: darkgray;
+
+                &:hover {
+                    background: none;
+                }
+            }
+        }
+
+        &.action {
+            width: 22px;
+            height: 22px;
+            font-size: 2.8rem;
+
+            &:hover {
+                color: darkgray;
+            }
+        }
+    }
+
+    .circle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-evenly;
+        background: black;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        border: solid 6px gray;
+
+        .display {
+            background: rgba(169, 169, 169, 0.356);
+            border-radius: 5px;
+            width: 200px;
+            margin-top: 24px;
+            
+            .timer-type {
+                color: white;
+                text-align: center;
+                font-family: 'Press Start 2P', cursive;
+                font-size: 1.2rem;
+            }
+        
+            .timer {
+                text-align: center;
+                font-size: 2.4rem;
+                font-weight: bold;
+                letter-spacing: 6px;
+                font-family: 'Turret Road', cursive;
+                line-height: 0px;
+            }
+        }
+
+        .settings {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 260px;
+
+            fieldset {
+                color: white;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                width: 100px;
+                font-family: 'Roboto', sans-serif;
+                font-size: 1em;
+
+                span {
+                    font-size: 1.6rem;
+                }
+            }
+        }
+        
+        .actions {
+            width: 160px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+    }
+}

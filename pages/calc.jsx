@@ -234,6 +234,7 @@ export default class Calculator extends React.Component {
             case buttonType.clear: this.handleClearButton(); break;
             case buttonType.equals: this.handleOperatorButton(button); break;
             case buttonType.interface: this.HandleInterfaceButton(button); break;
+            case buttonType.extra: this.gotoGithub(); break;
         }
     }
 
@@ -357,6 +358,10 @@ export default class Calculator extends React.Component {
         }
 
         this.setState(state);
+    }
+
+    gotoGithub() {
+        window.open("https://github.com/carlosjasso/fcc-front-end-libraries", "_blank");
     }
 
     render() {

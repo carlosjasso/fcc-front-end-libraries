@@ -48,21 +48,12 @@ class AppSection extends React.Component {
     // Component lifecycle
     componentDidMount() {
         this.sectionReveal();
-        window.addEventListener("resize", this.handleWindowResize);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener("resize", this.handleWindowResize);
     }
 
     // Event Handlers
     handleButtonClick() {
         this.setState({expanded: !this.state.expanded});
         this.sectionResize();
-    }
-
-    handleWindowResize(event) {
-        console.log(event);
     }
 
     // Animations
